@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>Voter Details</h2>
+
+    <p><b>Name:</b> {{ voter.name }}</p>
+    <p><b>Voter ID:</b> {{ voter.voter_id }}</p>
+    <p><b>Aadhar:</b> {{ voter.aadhar }}</p>
+
+    <br>
+
+    <!-- ✅ Go to Vote Page -->
+    <a href="/vote">
+        <button>Proceed to Vote</button>
+    </a>
+</div>
+
+</body>
+</html>
