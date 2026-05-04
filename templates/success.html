@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>✅ Vote Successful</h2>
+    <h3>You voted for:</h3>
+    <img src="{{ party.symbol }}" width="100">
+    <h2>{{ party.name }}</h2>
+</div>
+
+</body>
+</html>
