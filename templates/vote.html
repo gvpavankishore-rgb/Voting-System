@@ -9,7 +9,7 @@
 
 {% for p in parties %}
 <div class="card">
-    <img src="{{ p.symbol }}" width="80"><br>
+    <img src="{{ url_for('static', filename='BJP.png') }}">
     <h3>{{ p.name }}</h3>
 
 <!-- 👉 selected party id send -->
