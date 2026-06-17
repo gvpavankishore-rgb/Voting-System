@@ -1,13 +1,19 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
+import os
 
 app = Flask(__name__)
 app.secret_key = "secret123"
 
+# ✅ Fix DB path (important for hosting)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "database.db")
+
 def get_db():
-    conn = sqlite3.connect("database.db")
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 # ---------------- LOGIN ----------------
 @app.route("/", methods=["GET", "POST"])
@@ -66,7 +72,7 @@ def fingerprint(party_id):
     if not voter_id:
         return redirect("/")
 
-    # store selected party
+    # save selected party
     session["party_id"] = party_id
 
     return render_template("fingerprint.html")
@@ -85,16 +91,17 @@ def verify_fingerprint():
 
     user = db.execute("SELECT * FROM voters WHERE id=?", (voter_id,)).fetchone()
 
+    # ❌ Already voted check
     if user["has_voted"] == 1:
         return "Already Voted ❌"
 
-    # 🔴 Fake fingerprint (replace later)
+    # 🔴 Dummy fingerprint (later replace)
     fingerprint_ok = True
 
     if not fingerprint_ok:
         return "Fingerprint Failed ❌"
 
-    # save vote
+    # ✅ Save vote
     db.execute(
         "INSERT INTO votes (voter_id, party_id) VALUES (?, ?)",
         (voter_id, party_id)
@@ -129,24 +136,55 @@ def admin():
         voter_id = request.form["voter_id"]
         aadhar = request.form["aadhar"]
 
-        db.execute(
-            "INSERT INTO voters (name, voter_id, aadhar) VALUES (?, ?, ?)",
-            (name, voter_id, aadhar)
-        )
-        db.commit()
+        try:
+            db.execute(
+                "INSERT INTO voters (name, voter_id, aadhar) VALUES (?, ?, ?)",
+                (name, voter_id, aadhar)
+            )
+            db.commit()
+        except:
+            return "Voter already exists ❌"
 
-    voters = db.execute("SELECT * FROM voters").fetchall()
+    # All voters
+    voters = db.execute(
+        "SELECT * FROM voters"
+    ).fetchall()
 
-    return render_template("admin.html", voters=voters)
+    # Vote results
+    results = db.execute("""
+        SELECT parties.name,
+               parties.symbol,
+               COUNT(votes.id) AS total_votes
+        FROM parties
+        LEFT JOIN votes
+        ON parties.id = votes.party_id
+        GROUP BY parties.id
+    """).fetchall()
 
+    # Total votes count
+    total_votes = db.execute(
+        "SELECT COUNT(*) AS total FROM votes"
+    ).fetchone()["total"]
 
+    return render_template(
+        "admin.html",
+        voters=voters,
+        results=results,
+        total_votes=total_votes
+    )
+# ---------------- DELETE VOTER ----------------
 @app.route("/delete_voter/<int:id>")
 def delete_voter(id):
     db = get_db()
-    db.execute("DELETE FROM voters WHERE id=?", (id,))
-    db.commit()
-    return redirect("/admin")
 
+    db.execute(
+        "DELETE FROM voters WHERE id=?",
+        (id,)
+    )
+
+    db.commit()
+
+    return redirect("/admin")
 
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
