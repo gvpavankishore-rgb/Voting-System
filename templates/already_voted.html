@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Already Voted</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff416c,#ff4b2b);
+    font-family:Arial;
+}
+
+.box{
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    animation:pop 0.5s ease;
+}
+
+.cross{
+    font-size:80px;
+    color:red;
+    animation:shake 0.7s infinite;
+}
+
+h1{
+    color:#333;
+}
+
+a{
+    text-decoration:none;
+}
+
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:10px;
+    background:#ff416c;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+@keyframes pop{
+    from{
+        transform:scale(0.5);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+@keyframes shake{
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-8px);}
+    50%{transform:translateX(8px);}
+    75%{transform:translateX(-8px);}
+    100%{transform:translateX(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <div class="cross">❌</div>
+    <h1>Already Voted</h1>
+    <p>You have already cast your vote.</p>
+
+    <a href="/">
+        <button>Go To Login</button>
+    </a>
+</div>
+
+</body>
+</html>
