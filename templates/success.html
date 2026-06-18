@@ -4,6 +4,22 @@
 <title>Vote Success</title>
 
 <style>
+    .login-btn{
+    margin-top:25px;
+    padding:12px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    background:#00ff88;
+    color:black;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.login-btn:hover{
+    transform:scale(1.05);
+}
 *{
     margin:0;
     padding:0;
@@ -110,6 +126,9 @@ h2{
     <p class="msg">
         Your vote has been recorded successfully 🎉
     </p>
+    <a href="/logout">
+           <button class="login-btn">🔙 Back </button>
+    </a>
 
 </div>
 
